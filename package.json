@@ -44,5 +44,27 @@
     "lodash": "^4.17.10",
     "rc": "^1.2.8",
     "uuid": "^3.2.1"
+  },
+  "eslintConfig": {
+    "extends": [
+      "airbnb-base",
+      "prettier"
+    ],
+    "env": {
+      "node": true
+    }
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": true
+  },
+  "ava": {
+    "files": [
+      "tests/**/*.js",
+      "!tests/__data/**/*.js",
+      "!tests/helpers/**/*.js"
+    ],
+    "babel": false,
+    "compileEnhancements": false
   }
 }
