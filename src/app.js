@@ -4,6 +4,9 @@ const jwtMiddleware = require('koa-jwt');
 
 const config = require('./config');
 
+const usersModule = require('./modules/users');
+const authModule = require('./modules/auth');
+
 function createApp() {
   const app = new Koa();
   const router = new Router();
@@ -11,11 +14,13 @@ function createApp() {
     ctx.body = 'ok';
   });
 
+  router.use('/auth', authModule.routes());
   router.use(
     jwtMiddleware({
       secret: config.secret,
     })
   );
+  router.use('/users', usersModule.routes());
 
   app.use(router.allowedMethods());
   app.use(router.routes());
