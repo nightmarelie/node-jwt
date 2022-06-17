@@ -20,3 +20,12 @@ test('User can succesfully login', async t => {
   t.truthy(typeof refreshTokenRes.body.token === 'string');
   t.truthy(typeof refreshTokenRes.body.refreshToken === 'string');
 });
+
+test('User can get new access token using refresh token', async t => {
+  const res = await app.post('/auth/refresh').send({
+    refreshToken: 'REFRESH_TOKEN_1',
+  });
+  t.is(res.status, 200);
+  t.truthy(typeof res.body.token === 'string');
+  t.truthy(typeof res.body.refreshToken === 'string');
+});
