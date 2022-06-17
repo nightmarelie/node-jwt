@@ -29,3 +29,10 @@ test('User can get new access token using refresh token', async t => {
   t.truthy(typeof res.body.token === 'string');
   t.truthy(typeof res.body.refreshToken === 'string');
 });
+
+test('User get 404 on invalid refresh token', async t => {
+  const res = await app.post('/auth/refresh').send({
+    refreshToken: 'INVALID_REFRESH_TOKEN',
+  });
+  t.is(res.status, 404);
+});
