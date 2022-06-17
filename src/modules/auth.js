@@ -33,4 +33,16 @@ router.post('/login', bodyParser(), async ctx => {
   ctx.body = await issueTokenPair(user.id);
 });
 
+router.post('/refresh', bodyParser(), async ctx => {
+  const { refreshToken } = ctx.request.body;
+  const dbToken = await refreshTokenService.find({ token: refreshToken });
+  if (!dbToken) {
+    return;
+  }
+  await refreshTokenService.remove({
+    token: refreshToken,
+  });
+  ctx.body = await issueTokenPair(dbToken.userId);
+});
+
 module.exports = router;
