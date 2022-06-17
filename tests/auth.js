@@ -50,3 +50,32 @@ test('User can use refresh token only once', async t => {
   });
   t.is(secondResponse.status, 404);
 });
+
+
+
+test('Multiple refresh tokens are valid', async t => {
+  const firstLoginResponse = await app.post('/auth/login').send({
+    login: 'user2',
+    password: 'user2',
+  });
+  const secondLoginResponse = await app.post('/auth/login').send({
+    login: 'user2',
+    password: 'user2',
+  });
+  t.is(firstLoginResponse.status, 200);
+  t.is(secondLoginResponse.status, 200);
+
+  const firstRefreshResponse = await app.post('/auth/refresh').send({
+    refreshToken: firstLoginResponse.body.refreshToken,
+  });
+  t.is(firstRefreshResponse.status, 200);
+  t.truthy(typeof firstRefreshResponse.body.token === 'string');
+  t.truthy(typeof firstRefreshResponse.body.refreshToken === 'string');
+
+  const secondRefreshResponse = await app.post('/auth/refresh').send({
+    refreshToken: secondLoginResponse.body.refreshToken,
+  });
+  t.is(secondRefreshResponse.status, 200);
+  t.truthy(typeof secondRefreshResponse.body.token === 'string');
+  t.truthy(typeof secondRefreshResponse.body.refreshToken === 'string');
+});
