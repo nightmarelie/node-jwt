@@ -51,8 +51,6 @@ test('User can use refresh token only once', async t => {
   t.is(secondResponse.status, 404);
 });
 
-
-
 test('Multiple refresh tokens are valid', async t => {
   const firstLoginResponse = await app.post('/auth/login').send({
     login: 'user2',

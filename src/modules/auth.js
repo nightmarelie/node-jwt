@@ -6,6 +6,7 @@ const uuid = require('uuid/v4');
 const userService = require('../services/user');
 const refreshTokenService = require('../services/refreshToken');
 const config = require('../config');
+const jwtMiddleware = require('koa-jwt');
 
 const router = new Router();
 
@@ -43,6 +44,14 @@ router.post('/refresh', bodyParser(), async ctx => {
     token: refreshToken,
   });
   ctx.body = await issueTokenPair(dbToken.userId);
+});
+
+router.post('/logout', jwtMiddleware({ secret: config.secret }), async ctx => {
+  const { id: userId } = ctx.state.user;
+  await refreshTokenService.remove({
+    userId,
+  });
+  ctx.body = { success: true };
 });
 
 module.exports = router;
