@@ -1,6 +1,7 @@
 const test = require('ava');
 const agent = require('supertest-koa-agent');
 const createApp = require('../src/app');
+const issueToken = require('./helpers/issueToken');
 
 const app = agent(createApp());
 
@@ -49,6 +50,19 @@ test('User can use refresh token only once', async t => {
     refreshToken: 'REFRESH_TOKEN_ONCE',
   });
   t.is(secondResponse.status, 404);
+});
+
+test('Refresh tokens become invalid on logout', async t => {
+  const logoutRes = await app
+    .post('/auth/logout')
+    .set('Authorization', `Bearer ${issueToken({ id: 2 })}`);
+
+  t.is(logoutRes.status, 200);
+
+  const res = await app.post('/auth/refresh').send({
+    refreshToken: 'REFRESH_TOKEN_TO_DELETE_ON_LOGOUT',
+  });
+  t.is(res.status, 404);
 });
 
 test('Multiple refresh tokens are valid', async t => {
