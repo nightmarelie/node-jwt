@@ -19,3 +19,8 @@ test('Get user by id should be ok', async t => {
   t.is(res.status, 200);
   t.is(res.body.login, 'user');
 });
+
+test('Get user by invalid id should be 404', async t => {
+  const res = await app.get('/users/666').set('Authorization', authLine);
+  t.is(res.status, 404);
+});
