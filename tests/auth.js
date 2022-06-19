@@ -91,3 +91,11 @@ test('Multiple refresh tokens are valid', async t => {
   t.truthy(typeof secondRefreshResponse.body.token === 'string');
   t.truthy(typeof secondRefreshResponse.body.refreshToken === 'string');
 });
+
+test('User receives 401 on expired token', async t => {
+  const expiredToken = issueToken({ id: 1 }, { expiresIn: '1ms' });
+  const res = await app
+    .get('/users')
+    .set('Authorization', `Bearer ${expiredToken}`);
+  t.is(res.status, 401);
+});
