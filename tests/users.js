@@ -13,3 +13,9 @@ test('Users list', async t => {
   t.is(res.status, 200);
   t.truthy(Array.isArray(res.body));
 });
+
+test('Get user by id should be ok', async t => {
+  const res = await app.get('/users/1').set('Authorization', authLine);
+  t.is(res.status, 200);
+  t.is(res.body.login, 'user');
+});
