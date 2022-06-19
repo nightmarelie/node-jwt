@@ -99,3 +99,11 @@ test('User receives 401 on expired token', async t => {
     .set('Authorization', `Bearer ${expiredToken}`);
   t.is(res.status, 401);
 });
+
+test('User gets 403 on invalid credentials', async t => {
+  const res = await app.post('/auth/login').send({
+    login: 'INVALID',
+    password: 'INVALID',
+  });
+  t.is(res.status, 403);
+});
